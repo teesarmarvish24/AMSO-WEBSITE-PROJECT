@@ -158,14 +158,25 @@ p { margin: 0 0 1em; color: var(--ink-soft); }
   margin: 0; padding: 0;
 }
 .nav-links a {
+  position: relative;
   color: #d7e2f0;
   font-size: 0.92rem;
   font-weight: 500;
   padding: 6px 0;
-  border-bottom: 2px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
-.nav-links a:hover, .nav-links a.active { color: #fff; border-color: var(--gold-500); }
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--gold-500);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
 .nav-cta { display: flex; align-items: center; gap: 14px; }
 .nav-toggle {
   display: none;
@@ -588,4 +599,46 @@ td.num { font-weight: 700; color: var(--navy-800); }
 @keyframes status-pop {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   "Converge" interaction language — motion themed on optimization theory:
+   every touch point behaves like it's resolving toward a solution.
+   ========================================================================== */
+
+/* Buttons: inverted ripple that contracts to a point instead of expanding */
+.converge-btn {
+  position: relative;
+  overflow: hidden;
+}
+.converge-ring {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin-left: -23px;
+  margin-top: -23px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .converge-ring {
+    animation: converge-contract 0.45s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+  }
+}
+@keyframes converge-contract {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(0.05); opacity: 0; }
+}
+
+/* Page load: content resolves into focus, echoing convergence to a solution */
+@media (prefers-reduced-motion: no-preference) {
+  .page-enter {
+    animation: converge-focus 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@keyframes converge-focus {
+  0% { opacity: 0; transform: scale(1.015); filter: blur(4px); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
 }

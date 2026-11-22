@@ -113,4 +113,50 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     stats.forEach(function (el) { observer.observe(el); });
   })();
+
+  // ---------- "Converge" interaction language ----------
+  // A motion language built on the site's actual subject matter —
+  // optimization theory, where iteration converges toward a solution.
+
+  // Buttons: an inverted ripple that contracts to a point on click, rather
+  // than the usual ripple that expands outward.
+  (function convergeRipple() {
+    if (reduceMotion) return;
+    document.querySelectorAll(".btn").forEach(function (btn) {
+      btn.classList.add("converge-btn");
+      btn.addEventListener("click", function (e) {
+        var rect = btn.getBoundingClientRect();
+        var x = (typeof e.clientX === "number" ? e.clientX : rect.left + rect.width / 2) - rect.left;
+        var y = (typeof e.clientY === "number" ? e.clientY : rect.top + rect.height / 2) - rect.top;
+        var ring = document.createElement("span");
+        ring.className = "converge-ring";
+        ring.style.left = x + "px";
+        ring.style.top = y + "px";
+        btn.appendChild(ring);
+        ring.addEventListener("animationend", function () { ring.remove(); });
+      });
+    });
+  })();
+
+  // Primary buttons: a subtle magnetic pull toward the cursor on hover.
+  (function magneticButtons() {
+    if (reduceMotion) return;
+    document.querySelectorAll(".btn-primary").forEach(function (btn) {
+      btn.addEventListener("mousemove", function (e) {
+        var rect = btn.getBoundingClientRect();
+        var relX = e.clientX - rect.left - rect.width / 2;
+        var relY = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = "translate(" + relX * 0.18 + "px, " + (relY * 0.18 - 1) + "px)";
+      });
+      btn.addEventListener("mouseleave", function () {
+        btn.style.transform = "";
+      });
+    });
+  })();
+
+  // Page load: the hero/page-hero content resolves into focus.
+  (function pageEnter() {
+    var target = document.querySelector(".hero, .page-hero");
+    if (target) target.classList.add("page-enter");
+  })();
 });
