@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
+  var API = window.AMSO_API_BASE || "";
   var latestEl = document.getElementById("latest-conference");
   var latestHeading = document.getElementById("latest-heading");
   var timelineEl = document.getElementById("conference-timeline");
   if (!latestEl || !timelineEl) return;
 
-  fetch("/api/conferences")
+  fetch(API + "/api/conferences")
     .then(function (r) {
       if (!r.ok) throw new Error("Failed to load conferences");
       return r.json();

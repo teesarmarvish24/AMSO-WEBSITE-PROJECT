@@ -114,8 +114,10 @@
   </div>
 </section>
 
+<script src="assets/js/config.js"></script>
 <script>
 (function () {
+  var API = window.AMSO_API_BASE || "";
   var tokenInput = document.getElementById("token-input");
   var loadBtn = document.getElementById("load-btn");
   var authStatus = document.getElementById("auth-status");
@@ -154,7 +156,7 @@
 
   // ---------- Manuscripts ----------
   function loadManuscripts(token) {
-    fetch("/api/admin/manuscripts?token=" + encodeURIComponent(token))
+    fetch(API + "/api/admin/manuscripts?token=" + encodeURIComponent(token))
       .then(function (r) {
         if (r.status === 401) throw new Error("Invalid token.");
         if (!r.ok) throw new Error("Failed to load.");
@@ -196,7 +198,7 @@
         "</div>";
       card.querySelectorAll("button[data-action]").forEach(function (btn) {
         btn.addEventListener("click", function () {
-          fetch("/api/admin/manuscripts?token=" + encodeURIComponent(token), {
+          fetch(API + "/api/admin/manuscripts?token=" + encodeURIComponent(token), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: m.id, status: btn.getAttribute("data-action") }),
@@ -230,7 +232,7 @@
   confCancelBtn.addEventListener("click", resetConfForm);
 
   function loadConferences(token) {
-    fetch("/api/admin/conferences?token=" + encodeURIComponent(token))
+    fetch(API + "/api/admin/conferences?token=" + encodeURIComponent(token))
       .then(function (r) { return r.json(); })
       .then(function (items) { renderConferences(items, token); })
       .catch(function () {
@@ -277,7 +279,7 @@
 
       card.querySelector('[data-action="delete"]').addEventListener("click", function () {
         if (!confirm("Delete \"" + c.title + "\"? This cannot be undone.")) return;
-        fetch("/api/admin/conferences/" + c.id + "?token=" + encodeURIComponent(token), { method: "DELETE" })
+        fetch(API + "/api/admin/conferences/" + c.id + "?token=" + encodeURIComponent(token), { method: "DELETE" })
           .then(function () { loadConferences(token); });
       });
 
@@ -303,8 +305,8 @@
 
     var id = confIdEl.value;
     var url = id
-      ? "/api/admin/conferences/" + id + "?token=" + encodeURIComponent(token)
-      : "/api/admin/conferences?token=" + encodeURIComponent(token);
+      ? API + "/api/admin/conferences/" + id + "?token=" + encodeURIComponent(token)
+      : API + "/api/admin/conferences?token=" + encodeURIComponent(token);
     var method = id ? "PATCH" : "POST";
 
     confFormStatus.textContent = "Saving…";

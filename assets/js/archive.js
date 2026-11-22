@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
+  var API = window.AMSO_API_BASE || "";
   var listEl = document.getElementById("archive-list");
   var form = document.getElementById("submit-form");
   var statusEl = document.getElementById("form-status");
 
   function loadArchive() {
-    fetch("/api/manuscripts")
+    fetch(API + "/api/manuscripts")
       .then(function (r) {
         if (!r.ok) throw new Error("Failed to load archive");
         return r.json();
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
               '<div class="archive-item">' +
               "<h4>" + escapeHtml(m.title) + "</h4>" +
               '<div class="meta">' + escapeHtml(m.authors) + " &middot; " + conf + date + "</div>" +
-              '<a class="btn btn-outline btn-sm" href="/api/manuscripts/' + m.id + '/download">Download</a>' +
+              '<a class="btn btn-outline btn-sm" href="' + API + '/api/manuscripts/' + m.id + '/download">Download</a>' +
               "</div>"
             );
           })
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
 
-      fetch("/api/manuscripts", { method: "POST", body: new FormData(form) })
+      fetch(API + "/api/manuscripts", { method: "POST", body: new FormData(form) })
         .then(function (r) {
           return r.json().then(function (data) {
             return { ok: r.ok, data: data };
